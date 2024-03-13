@@ -5,6 +5,7 @@ from typedef import *
 from ctypes import *
 import time
 
+# 倒计时函数
 def time_count(num):
     for i in range(num):
         time.sleep(1)
@@ -39,8 +40,8 @@ motor_s1_stop = MOTOR_send()
 motor_s0_start.id = 0          #ID = 0 (可选ID为0,1,2)
 motor_s0_start.mode = 10       #闭环模式 (可选模式 0=关闭,5=开环,10=闭环)
 motor_s0_start.T = 0.0         #单位：Nm, T<255.9
-motor_s0_start.W = 50.0        #单位：rad/s, W<511.9
-motor_s0_start.Pos = 0         #单位：rad, Pos<131071.9
+motor_s0_start.W = 20.0        #单位：rad/s, W<511.9
+motor_s0_start.Pos = 0.0         #单位：rad, Pos<131071.9
 motor_s0_start.K_P = 0.0       #K_P<31.9
 motor_s0_start.K_W = 3         #K_W<63.9
 
@@ -52,7 +53,7 @@ motor_s0_stop.mode = 0
 motor_s1_start.id = 1          #ID = 0 (可选ID为0,1,2)
 motor_s1_start.mode = 10       #闭环模式 (可选模式 0=关闭,5=开环,10=闭环)
 motor_s1_start.T = 0.0         #单位：Nm, T<255.9
-motor_s1_start.W = 50.0        #单位：rad/s, W<511.9
+motor_s1_start.W = 0.0        #单位：rad/s, W<511.9
 motor_s1_start.Pos = 0         #单位：rad, Pos<131071.9
 motor_s1_start.K_P = 0.0       #K_P<31.9
 motor_s1_start.K_W = 3         #K_W<63.9
