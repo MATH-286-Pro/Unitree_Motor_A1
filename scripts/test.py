@@ -4,14 +4,8 @@ import sys
 from typedef import *
 from ctypes import *
 import time
-
-
-# 倒计时函数
-def time_count(num):
-    for i in range(num):
-        time.sleep(1)
-        print(str(i+1)+'s')
-
+import threading
+import keyboard  # 需要安装 keyboard 库
 
 # 寻找串口
 system=platform.system()
@@ -36,7 +30,7 @@ c = cdll.LoadLibrary(libPath)
 motor_s0_start = MOTOR_send()
 motor_s0_stop = MOTOR_send()
 motor_r = MOTOR_recv()
- 
+
 motor_s1_start = MOTOR_send()
 motor_s1_stop = MOTOR_send()
 
@@ -66,41 +60,42 @@ motor_s1_start.K_W = 3         #K_W<63.9
 motor_s1_stop.id = 1
 motor_s1_stop.mode = 0
 
-# print(bin(motor_s0_start.mode))       # 二进制显示
-# print(bin(motor_s0_stop.mode))        # 二进制显示
-# print('ID =',(motor_s0_start.mode))   # 十进制显示
-# print('ID =',(motor_s0_stop.mode))    # 十进制显示
-
 c.modify_data(byref(motor_s0_start))
 c.modify_data(byref(motor_s0_stop))
 c.modify_data(byref(motor_s1_start))
 c.modify_data(byref(motor_s1_stop))
 
-# print(bin(motor_s0_start.motor_send_data.Mdata.mode))
-# print((motor_s0_start.motor_send_data.Mdata.mode))
-
-
-
 c.send_recv(fd, byref(motor_s0_stop), byref(motor_r)) # 关闭 ID=0 电机
 c.send_recv(fd, byref(motor_s1_stop), byref(motor_r)) # 关闭 ID=1 电机
+
+# 测试日志：2024.3.18 使用示波器查看 RS485 信号
+# 20:07 检测到RS485信号
+
+
+# 循环发送信号函数
+def send_commands():
+    while not exit_event.is_set():  # 检查退出事件是否被设置
+        c.send_recv(fd, byref(motor_s0_start), byref(motor_r))  # 开启 ID=0 电机
+        c.send_recv(fd, byref(motor_s1_start), byref(motor_r))  # 开启 ID=1 电机
+        time.sleep(0.1)  # 每 0.1 秒运行一次
+
+# 检测空格键函数
+def on_space_press(event):
+    exit_event.set()  # 当按下空格键时，设置退出事件
+
+
+
+
+# 测试部分
 print('测试开始')
+exit_event = threading.Event()
+keyboard.on_press_key("space", on_space_press)  # 监听空格键按下事件
 
-c.send_recv(fd, byref(motor_s0_start), byref(motor_r)) # 开启 ID=0 电机
-c.send_recv(fd, byref(motor_s1_start), byref(motor_r)) # 开启 ID=1 电机
-time_count(5)
-# time.sleep(5) 
+send_commands_thread = threading.Thread(target=send_commands)
+send_commands_thread.start()
+
+send_commands_thread.join()  # 等待发送指令的线程结束
 
 c.send_recv(fd, byref(motor_s0_stop), byref(motor_r)) # 关闭 ID=0 电机
 c.send_recv(fd, byref(motor_s1_stop), byref(motor_r)) # 关闭 ID=1 电机
-print('测试结束 :)')
-
-
-# c.close_serial(fd) # 关闭程序 (会导致VSCode关闭 qwq)
-
-# 前置要求：需要上级文件目录包含 lib 文件夹 (lib 文件夹中包含对应的动态链接库)
-#
-# 使用方法：1.修改对应 COM 口
-#          2.cd scripts
-#          3.python check.py 
-#
-# 任务日志：2024.3.13 使用宇树485转USB成功启动，打印出 end 说明正常运行
+print('测试结束')
