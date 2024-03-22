@@ -53,13 +53,13 @@ motor_s0_stop.id = 0
 motor_s0_stop.mode = 0
 
 # 设置电机 1 速度模式参数 (开启电机)
-motor_s1_start.id = 1             #ID = 0 (可选ID为0,1,2)
-motor_s1_start.mode = 10          #闭环模式 (可选模式 0=关闭,5=开环,10=闭环)
-motor_s1_start.T = 0.0            #单位：Nm, T<255.9
-motor_s1_start.W = 5.0*Gear_ratio #单位：rad/s, W<511.9
-motor_s1_start.Pos = 0            #单位：rad, Pos<131071.9
-motor_s1_start.K_P = 0.0          #K_P<31.9
-motor_s1_start.K_W = 3            #K_W<63.9
+motor_s1_start.id = 1               #ID = 0 (可选ID为0,1,2)
+motor_s1_start.mode = 10            #闭环模式 (可选模式 0=关闭,5=开环,10=闭环)
+motor_s1_start.T = 0.0              #单位：Nm, T<255.9
+motor_s1_start.W = 5.0*Gear_ratio   #单位：rad/s, W<511.9
+motor_s1_start.Pos = 0              #单位：rad, Pos<131071.9
+motor_s1_start.K_P = 0.0            #K_P<31.9
+motor_s1_start.K_W = 3              #K_W<63.9
 
 # 设置电机 1 位置模式参数 (开启电机)
 motor_p1_start.id = 1               #ID = 0 (可选ID为0,1,2)
@@ -67,8 +67,8 @@ motor_p1_start.mode = 10            #闭环模式 (可选模式 0=关闭,5=开�
 motor_p1_start.T = 0.0              #单位：Nm, T<255.9
 motor_p1_start.W = 0.0              #单位：rad/s, W<511.9
 motor_p1_start.Pos = PI*Gear_ratio  #单位：rad, Pos<131071.9
-motor_p1_start.K_P = 0.2            #K_P<31.9
-motor_p1_start.K_W = 3.0            #K_W<63.9
+motor_p1_start.K_P = 0.2            #位置刚度 K_P<31.9
+motor_p1_start.K_W = 3.0            #速度刚度 K_W<63.9
 
 # 设置电机 1 参数 (关闭电机)
 motor_s1_stop.id = 1
